@@ -105,7 +105,7 @@ export class Product {
 #
 ### ProductRepository
 - Este repositorio proporciona métodos para interactuar con la tabla  'Product' (en este caso) en tu base de datos.
-  - @InjectRepository(ÇProduct) - Solicita que un repositorio para el modelo 'Product' se inyecte en este servicio.
+  - @InjectRepository(Product) - Solicita que un repositorio para el modelo 'Product' se inyecte en este servicio.
   ```
    constructor(
     @InjectRepository(Product)
@@ -122,4 +122,22 @@ export class Product {
     throw new InternalServerErrorException('Unexpected error');
   }
   ```
-
+#
+## BeforeInsert
+- Permite controlar el valor que se va a mandar a una de las columnas si por algún casual se envia vacio.
+```
+   @BeforeInsert()
+    checkSlug(){
+        if (!this.slug) {
+            this.slug = this.title
+                .toLowerCase()
+                .replaceAll(' ', '_')
+                .replaceAll("'", ' ');
+        } else {
+            this.slug = this.slug
+            .toLowerCase()
+            .replaceAll(' ', '_')
+            .replaceAll("'", ' ');
+        }
+}
+```
