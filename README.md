@@ -194,3 +194,19 @@ Y sobrescribimos con los datos nuevos
 Podemos checkear la actualización de elementos directamente mediante el decorador **@Beforeupdate**, método parecido a Before Insert
 
 
+# Sección:  Relaciones en TypeORM
+### OneToMany, ManyToOne, ManyToMany
+Se busca un relación de uno a muchos en el caso de los productos que ya tenemos y una relación de muchos a uno desde la tabla de imágenes.
+
+1. En primer lugar para crear la nueva tabla de imágenes:
+- Se crea una nueva entidad dentro de la carpeta de productos ya que guardan esa relación entre las tablas.
+2. Agregamos al archivo products.module.ts, dentro del método forFeature del módulo TypeOrmModule, la entidad creada, para que automaticamente se cree la tabla en nuestra BBDD
+3. Posibilidad de crear un archivo "Barril" donde se incluyen las exportaciones de todas las entidades para que en el archivo products.module.ts sólo aparezca un archivo importado. En este caso se debe denomina como index.ts. Conveniente si se tienen muchas entidades (desde 4 o 5, en mi opinión)
+4. Crear la relación entre las tablas:
+- Añadir la columna con la columna que vamos a relacionar, a cada una de las entidades.
+- En este caso no utilizamos el método @Column, para crear una columna si no que elegimos el tipo de relación que va a tener con la otra table
+  - ManytoOne()
+  - ManyToMany()
+  - OneToMany()
+
+
