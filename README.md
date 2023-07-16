@@ -141,3 +141,56 @@ export class Product {
         }
 }
 ```
+# Create Query Builder
+- Método que ofrece  repository de typeorm para realizar instancias de sql
+Parte del else:
+```
+  if (isUUID(term)) {
+      product = await this.productRepository.findOneBy({ id: term });
+    }else{
+      const querBuilder = this.productRepository.createQueryBuilder()
+      product = await querBuilder
+        .where('title = :title or slug = :slug', {
+          title: term,
+          slug: term
+        }).getOne();
+    }
+```
+    Hay que restructurar el código para que haya una coincidencia ( mayúsculas o minúsculas) a la hora de buscar.
+
+```
+    if (isUUID(term)) {
+      product = await this.productRepository.findOneBy({ id: term });
+    }else{
+      const querBuilder = this.productRepository.createQueryBuilder()
+      product = await querBuilder
+        .where('UPPER(title) = :title or slug = :slug', {
+          title: term.toUpperCase,
+          slug: term.toLowerCase
+        }).getOne();
+    }
+```
+# Update elements
+- Precargamos el elemento a editar.
+- Controlamos los errores con la función handleExceptions
+Y sobrescribimos con los datos nuevos
+```
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    //Prepara el elemento para la actualización
+    const product = await this.productRepository.preload({
+      id: id,
+      ...updateProductDto
+    })
+    if (!product) throw new NotFoundException(`Product with id: ${id} not found`);
+
+    try {
+      return this.productRepository.save(product);
+    } catch (error) {
+      this.handleExceptions(error);
+    }
+  
+  }
+```
+Podemos checkear la actualización de elementos directamente mediante el decorador **@Beforeupdate**, método parecido a Before Insert
+
+
