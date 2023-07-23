@@ -64,6 +64,13 @@ Soporta ambos patrones de diseño, brindando a los desarrolladores la flexibilid
 ```
 Admite tanto la carga eager como la lazy para las relaciones, lo que puede ayudar a mejorar el rendimiento de las aplicaciones al permitir a los desarrolladores controlar cuándo se cargan los datos relacionados.
 ```
+# 
+### Entidades
+- Representa una tabla en tu base de datos. Las entidades suelen estar asociadas con el ORM que estas utilizando, como TypeOrm.
+- Contienen propiedades que se mapean directamente a las columnas de la tabla de la BBDD
+# 
+### DTO
+- Objetos que se utilizan para encapsular los datos, y enviarlos desde el cliente al servidor o viceversa. Los DTOs ayudan a definir que datos se pueden enviar en una solicitud o respuesta, lo que puede ayudar a mantener la coherencia y la seguridad de la aplicación, asegurando que solo se envíen los datos necesarios y esperados.
 #
 ## Configuración typeorm - BBDD 
 
@@ -208,5 +215,10 @@ Se busca un relación de uno a muchos en el caso de los productos que ya tenemos
   - ManytoOne()
   - ManyToMany()
   - OneToMany()
+  #
+  ### Eager relations
+- Son una forma de definir relaciones entre entidades que siempre deben cargarse de la base de datos cuando se consulta la entidad principal.
+- Importante establecer como '{eager: true}' en la definición de @OneToMany. que quiere decir que cada vez que se cargue un Product de la base de datos, TypeORM también cargará automáticamente todas las Images relacionadas con ese product
+- Se debe tener cuidado con este método, ya que si se cargan muchas relaciones se puede ver afectado el rendimiento de la consulta.
 
 
