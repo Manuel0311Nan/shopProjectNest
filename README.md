@@ -32,7 +32,10 @@ Cambiar las variables de entorno
 ```
 docker-compose up
 ```
-
+5. ejecutar SEED
+```
+http://localhost:3000/api/seed
+```
 # Description of TypeOrm Use
 ### Abstracción de la base de datos
 ```
@@ -109,6 +112,11 @@ export class Product {
     title: string;
 }
 ```
+#
+### Nombre de la tabla
+- Modificar en los archivos "entity" dentro de la etiqueta @Entity(name: 'nombre de la tabla).
+- Para cambiar el nombre de las tablas, es necesario tirar abajo el servidor docker, volverlo a levantar
+
 #
 ### ProductRepository
 - Este repositorio proporciona métodos para interactuar con la tabla  'Product' (en este caso) en tu base de datos.
@@ -220,5 +228,13 @@ Se busca un relación de uno a muchos en el caso de los productos que ya tenemos
 - Son una forma de definir relaciones entre entidades que siempre deben cargarse de la base de datos cuando se consulta la entidad principal.
 - Importante establecer como '{eager: true}' en la definición de @OneToMany. que quiere decir que cada vez que se cargue un Product de la base de datos, TypeORM también cargará automáticamente todas las Images relacionadas con ese product
 - Se debe tener cuidado con este método, ya que si se cargan muchas relaciones se puede ver afectado el rendimiento de la consulta.
+  #
+  ### Query runner
+  - Permite ejecutar "x" cantidad de sentencias SQL, y si por el casual una fallase, se puede hacer un runner back y devolver todo a su estado anterior
+    - Útil cuando necesitas más control sobre tus consultas que el que te proporciona el sistema de consulta de alto nivel de TypeORM.
+    - Es la herramienta que utiliza TypeOrm para realizar migraciones de base de datos.
+    #
+  ### Transacciones
+- Utilizamos QueryRunner para manejar transacciones de base de datos. Es útil cuando tienes varias operaciones de base de datos que necesitan realizarse juntas, y si alguna de ellas falla, no quierer que ninguna de las operaciones se realice.
 
 
