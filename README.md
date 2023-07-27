@@ -236,5 +236,70 @@ Se busca un relación de uno a muchos en el caso de los productos que ya tenemos
     #
   ### Transacciones
 - Utilizamos QueryRunner para manejar transacciones de base de datos. Es útil cuando tienes varias operaciones de base de datos que necesitan realizarse juntas, y si alguna de ellas falla, no quierer que ninguna de las operaciones se realice.
+    #
+  ### @types/multer
+  - Proporciona definiciones de tipos para multer.
+
+```
+  @Post('product')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile( @UploadedFile() file : Express.Multer.File) {
+    return file
+  }
+```
+#
+### FileFilter*
+- Creamos el método fileFilter para filtrar que no se utilicen extensiones que no sean de imagenes
+ **fileFilter**:
+ ```
+export const fileFilter = (req: Express.Request, file: Express.Multer.File, callback: Function) => {
+    
+    if (!file) return callback(new Error('File is empty'), false);
+
+    const fileExtension = file.mimetype.split('/')[1];
+    const validExtensions = ['jpg', 'jpeg', 'png', 'gif']
+    
+    if (validExtensions.includes(fileExtension)) {
+        return callback(null, true)
+    }
+
+    callback(null, false);
+}
+ ```
 
 
+**FileInterceptor** Interceptor específico provisto por @nestjs/platform-express, para manejar la subida de un archivo en una petición HTTP. Basado en la biblioteca multer. Es el tipo de datos que se utiliza generalmente para la subida de archivos en las aplicaciones web.
+- Cuando se aplica este interceptor estamos diciendo "Espera una subida de un archivo en esta ruta y maneja los detalles de esa subida por mi " Dentro del parentesis, le ponemos el mismo nombre que le hayamos dado como key (en este caso en postman se le colocó file)
+- Una vez subido el archivo se sube a un servidor temporal.
+#
+### Archivo .gitkeep
+#
+### Subida de archivos
+- Creamos una carpeta "static" y dentro una carpeta "uploads" para las imágenes súbidas.
+- A través de la etiqueta destination decidimos en que carpeta guardaremos los archivos que se manden
+```
+ @UseInterceptors(FileInterceptor('file', {
+    fileFilter: fileFilter,
+    storage: diskStorage({
+      destination: './static/uploads'
+    })
+  }) )
+```
+- Renombramos los archivos, ya que se crea con un nombre alfanúmerico extraño.
+  - Creamos un nuevo helper, donde como el de antes creamos una función que nos ayude a controlar aquello que se está guardando.
+
+
+**fileNamer**:
+ ```
+import { v4 as uuid } from "uuid";
+
+export const fileNamer = (req: Express.Request, file: Express.Multer.File, callback: Function) => {
+    
+    if (!file) return callback(new Error('File is empty'), false);
+
+    const fileExtension = file.mimetype.split('/')[1];
+    const fileName = `${uuid()}.${fileExtension}`;
+
+    callback(null, fileName);
+}
+ ```
