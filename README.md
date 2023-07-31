@@ -32,6 +32,7 @@ Cambiar las variables de entorno
 ```
 docker-compose up
 ```
+- Y entrar en Table Plus para visualizar los datos
 5. ejecutar SEED
 ```
 http://localhost:3000/api/seed
@@ -137,6 +138,23 @@ export class Product {
     throw new InternalServerErrorException('Unexpected error');
   }
   ```
+#
+## Comandos nestJS
+1. nest g res nombre --no-spec
+2. 
+#
+## Pasos para visualizar la nueva tabla en Table Plus desde ORM
+1. Creamos en la entidad cada una de las columnas, incluyendo los decoradores
+- Column,
+2. En el archivo nombre.module.ts
+```
+  imports: [
+    TypeOrmModule.forFeature([
+      Nombre
+    ])
+  ],
+    exports: [TypeOrmModule]
+```
 #
 ## BeforeInsert
 - Permite controlar el valor que se va a mandar a una de las columnas si por algún casual se envia vacio.
