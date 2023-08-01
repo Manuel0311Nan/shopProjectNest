@@ -321,3 +321,21 @@ export const fileNamer = (req: Express.Request, file: Express.Multer.File, callb
     callback(null, fileName);
 }
  ```
+#
+### Libreria para encriptar la contraseña
+- npm i bcrypt
+#
+### JWT
+- Módulos de registro normales
+```
+JwtModule.register({
+    secret: process.env.JWT_SECRET,
+    signOptions: {
+      expiresIn: '2h'
+    }
+})
+```
+- Módulos asíncronos
+```
+
+```
