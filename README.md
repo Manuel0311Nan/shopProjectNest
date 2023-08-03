@@ -337,5 +337,27 @@ JwtModule.register({
 ```
 - Módulos asíncronos
 ```
+JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          secret: process.env.JWT_SECRET,
+          signOptions: {
+            expiresIn: '2h'
+          }
+        }
+      }
+    })
+```
+#
+### JwtStrategy (clases 172/173/174)
+- Se pueden implementar diferentes estrategias para incluir JWT
+  - Las estrategias se crean en un archivo nuevo, importando PassportStrategy desde @nestjs/passport y Strategy desde passport-jwt.
+  - 
+```
 
 ```
+#
+### Guards y rutas privadas
+- 
