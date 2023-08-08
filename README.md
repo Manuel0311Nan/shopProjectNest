@@ -360,4 +360,28 @@ JwtModule.registerAsync({
 ```
 #
 ### Guards y rutas privadas
-- 
+- Los guards determinan si un request puede ser manejados por la ruta o el controlador. forma de implementar una lógica de autorización y autenticación en tus endpoints.
+
+#
+### Custom Property Decorator -- GetUser -- RawHeaders
+- Crear un decorador de propiedad:  createPAramDecorator de @nestjs/common
+
+Función que proviene de NestJS. Se utiliza para crear un decorador de parámetros personalizado. Los decoradores son una característica especial de TypeScript que permite agregar anotaciones y metadatos a las clases, métodos y propiedades. Un decorador de parámetros se puede usar para decorar un parámetro de un método en una clase, proporcionando alguna funcionalidad adicional. En NestJS, los decoradores de parámetros se utilizan comúnmente para extraer datos de las solicitudes entrantes, como los parámetros de la ruta, los cuerpos de las solicitudes, las cookies, etc.
+#
+### Custom Guards
+- Guards que defines tú mismo para satisfacer tus propias necesidades. Podrías tener un guardia personalizado para verificar si un usuario está autenticado o si tiene un rol específico.
+- Se utilizan sin crear una instancia, se coloca el nombre pero sin parentesis.
+- En el ejemplo se utiliza también el decorador SerMetadata, que se utiliza para asociar metadatos personalizados con elementos específicos, como rutas, controladores, métodos, etc. Estos metadatos pueden ser luego leídos y utilizados en otras partes de tu aplicación.
+@SetMetadata(clave para el metadato, valor del metadato)
+```
+  @SetMetadata('roles', ['admin', 'super-user'])
+```
+#
+### Reflector
+- Utilidad de nestjs que facilita la tarea de recuperar metadatos de elementos de la aplicación. Nos permite acceder a los metadatos pasados dos argumentos: la clave de los metadatos (roles) y un contexto para recuperar los metadatos (context.getHandler)
+#
+### Proteger roles
+- A través de la creación de un decorador para la protección de roles. Elimina el decorador de @SetMetadata.
+#
+### Creación de un decorador que englobe todo lo anterior
+https://docs.nestjs.com/custom-decorators#decorator-composition
