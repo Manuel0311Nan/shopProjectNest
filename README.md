@@ -384,4 +384,14 @@ Función que proviene de NestJS. Se utiliza para crear un decorador de parámetr
 - A través de la creación de un decorador para la protección de roles. Elimina el decorador de @SetMetadata.
 #
 ### Creación de un decorador que englobe todo lo anterior
+### Decorator composition
 https://docs.nestjs.com/custom-decorators#decorator-composition
+```
+export function Auth(...roles: ValidRoles[]) {
+    return applyDecorators(
+        RoleProtected(...roles),
+        UseGuards( AuthGuard(), UserRoleGuard),
+    )
+}
+```
+- Una vez creado el decorator composition, en este caso como Auth(), podemos proteger cualquier ruta del backend mediante la importación del AuthModule, y aplicando en el controller el método Auth(), ya sea para una ruta como en  SEED o a todas las rutas como en PRODUCTS (comentado al principio, después explica diferentes oopciones) . 

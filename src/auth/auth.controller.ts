@@ -1,14 +1,13 @@
-import { RawHeaders } from './decorator/raw-headers.decorator';
+
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Headers, SetMetadata } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './entities/user.entity';
-import { GetUser } from './decorator/get_user.decorator';
+import { GetUser, RawHeaders, RoleProtected, Auth } from './decorator';
 import { IncomingHttpHeaders } from 'http';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
-import { RoleProtected } from './decorator/role-protected.decorator';
 import { ValidRoles } from './interfaces/valid.roles.interface';
 
 
@@ -48,12 +47,21 @@ export class AuthController {
   @Get('private2')
   @RoleProtected(ValidRoles.superUser, ValidRoles.user, ValidRoles.admin)
   @UseGuards( AuthGuard(), UserRoleGuard)
-  privateRoute2( @GetUser() user: User) {
-
+  privateRoute2(
+    @GetUser() user: User
+  ) {
     return {
       ok: true,
       user
     }
   }
-
+  @Get('private3')
+  @Auth(ValidRoles.admin, ValidRoles.superUser)
+  privateRoute3(
+    @GetUser() user: User) {
+    return {
+      ok: true,
+      user
+    }
+  }
 }
