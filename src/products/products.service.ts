@@ -15,6 +15,7 @@ import { validate as uuid } from 'uuid';
 import { isUUID } from 'class-validator';
 import { ProductImage } from './entities/product-image.entity';
 import { query } from 'express';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -33,12 +34,13 @@ export class ProductsService {
 
 
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
     try {
       const {images = [], ...productDetails} = createProductDto
       const product = this.productRepository.create({
         ...productDetails,
-        images: images.map(image => this.productImageRepository.create({url: image}))
+        images: images.map(image => this.productImageRepository.create({ url: image })),
+        user
       });
       await this.productRepository.save(product);
 
@@ -96,7 +98,7 @@ export class ProductsService {
     }
 }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto, user: User) {
     const { images, ...toUpdate } = updateProductDto;
     //Prepara el elemento para la actualización
     const product = await this.productRepository.preload({
@@ -114,13 +116,13 @@ export class ProductsService {
       if (images) {
         await queryRunner.manager.delete(ProductImage, { product: { id } })
         product.images = images.map(
-          image => this.productImageRepository.create({ url: image })
+          image => this.productImageRepository.create({ url: image }),
         )
       } else {
         
       }
 
-      
+      product.user = user
       await queryRunner.manager.save(product);
       // await this.productRepository.save(product);
       await queryRunner.commitTransaction();
